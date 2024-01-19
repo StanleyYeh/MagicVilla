@@ -25,6 +25,7 @@ namespace MagicVilla_Web.Controllers
             var response = await _villaService.GetAllAsync<APIResponse>();
             if (response != null && response.IsSuccess)
             {
+                //第一次GitHub變更
                 list = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(response.Result));
             }
             return View(list);
