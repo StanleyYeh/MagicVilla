@@ -55,8 +55,26 @@ namespace MagicVilla_Web.Services
                 //以非同步作業方式將 HTTP 內容序列化為字串
                 var apiContent = await apiResponse.Content.ReadAsStringAsync();
 
-                var APIResponse = JsonConvert.DeserializeObject<T>(apiContent);
+                try
+                {
+                    APIResponse ApiResponse = JsonConvert.DeserializeObject<APIResponse>(apiContent);
+                    if (apiResponse.StatusCode == System.Net.HttpStatusCode.BadRequest ||
+                        apiResponse.StatusCode == System.Net.HttpStatusCode.NotFound) 
+                    {
+                        ApiResponse.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                        ApiResponse.IsSuccess = false;
+                        var res = JsonConvert.SerializeObject(ApiResponse);
+                        var returnObj = JsonConvert.DeserializeObject<T>(res);
+                        return returnObj;
+                    }
+                }
+                catch (Exception e) 
+                {
+                    var exceptoinResponse = JsonConvert.DeserializeObject<T>(apiContent);
+                    return exceptoinResponse;
+                }
 
+                var APIResponse = JsonConvert.DeserializeObject<T>(apiContent);
                 return APIResponse;
             }
             catch(Exception e)

@@ -64,6 +64,25 @@ namespace MagicVilla_Web.Controllers
                 {
                     return RedirectToAction("IndexVillaNumber");
                 }
+                else 
+                {
+                    if(response.ErrorMessages.Count > 0)
+                    {
+                        ModelState.AddModelError("ErrorMessage",response.ErrorMessages.FirstOrDefault());
+                    }
+                }
+
+                //Add:新增失敗,重新導回時,下拉選單會被清空
+                var resp = await _villaService.GetAllAsync<APIResponse>();
+                if (resp != null && resp.IsSuccess)
+                {
+                    model.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>
+                        (Convert.ToString(resp.Result)).Select(i => new SelectListItem
+                        {
+                            Text = i.Name,
+                            Value = i.Id.ToString()
+                        }); ;
+                }
             }
             return View(model);
         }
