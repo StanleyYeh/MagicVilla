@@ -46,6 +46,7 @@ namespace MagicVilla_Web.Controllers
                 var response = await _villaService.CreateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = "Villa created successfully";
                     return RedirectToAction("IndexVilla");
                 }
                 else
@@ -56,6 +57,7 @@ namespace MagicVilla_Web.Controllers
                     }
                 }
             }
+            TempData["error"] = "Error encountered.";
             return View(model);
         }
 
@@ -81,11 +83,13 @@ namespace MagicVilla_Web.Controllers
                 var response = await _villaService.UpdateAsync<APIResponse>(model);
                 if (response != null && response.IsSuccess)
                 {
+                    TempData["success"] = "Villa update successfully";
                     //nameof()
                     //取得一個指定識別符號的名稱作為一個字串，其中識別符號，可以是變數、方法、屬性、類別、命名空間等
                     return RedirectToAction(nameof(IndexVilla));
                 }
             }
+            TempData["error"] = "Error encountered.";
             return View(model);
         }
 
@@ -106,11 +110,13 @@ namespace MagicVilla_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteVilla(VillaDTO model)
         {
-                var response = await _villaService.DeleteAsync<APIResponse>(model.Id);
-                if (response != null && response.IsSuccess)
-                {
-                    return RedirectToAction(nameof(IndexVilla));
-                }
+            var response = await _villaService.DeleteAsync<APIResponse>(model.Id);
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Villa delete successfully";
+                return RedirectToAction(nameof(IndexVilla));
+            }
+            TempData["error"] = "Error encountered.";
             return View(model);
         }
 
