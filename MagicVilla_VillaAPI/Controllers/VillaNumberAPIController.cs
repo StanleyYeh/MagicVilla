@@ -91,7 +91,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -132,7 +132,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpDelete("{id:int}", Name = "DeleteVillaNumber")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -169,7 +169,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpPut("{id:int}", Name = "UpdateVillaNumber")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 

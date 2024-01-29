@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.DTO;
+using Microsoft.AspNetCore.Identity;
 
 namespace MagicVilla_VillaAPI
 {
@@ -17,6 +18,8 @@ namespace MagicVilla_VillaAPI
             CreateMap<VillaNumber, VillaNumberDTO>().ReverseMap();
             CreateMap<VillaNumber, VillaNumberCreateDTO>().ReverseMap();
             CreateMap<VillaNumber, VillaNumberUpdateDTO>().ReverseMap();
+
+            CreateMap<IdentityUser, UserDTO>().ReverseMap();
         }
     }
 }
