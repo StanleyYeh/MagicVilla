@@ -52,30 +52,34 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task <ActionResult<APIResponse>> GetVillas([FromQuery(Name = "filterOccupancy")] int? occupancy,
-            [FromQuery] string? search, int pageSize = 5, int pageNumber = 1)
+
+        public async Task<ActionResult<APIResponse>> GetVillas([FromQuery(Name = "filterOccupancy")] int? occupancy,
+            [FromQuery] string? search, int pageSize = 0, int pageNumber = 1)
         {
             //_logger.LogInformation("Getting all villas.");
             //_logger.Log("Getting all villas.", "");
             try
             {
                 IEnumerable<Villa> villaList;
-                
-                if(occupancy > 0)
+
+                if (occupancy > 0 && !string.IsNullOrEmpty(search))
                 {
-                    villaList = await _dbVilla.GetAllAsync(x => x.Occupancy == occupancy, 
-                        pageSize:pageSize, pageNumber:pageNumber);
+                    villaList = await _dbVilla.GetAllAsync(x => x.Occupancy == occupancy, x => x.Name.ToLower().Contains(search),
+                        pageSize: pageSize, pageNumber: pageNumber);
+                }
+                else if(occupancy > 0)
+                {
+                    villaList = await _dbVilla.GetAllAsync(x => x.Occupancy == occupancy,
+                        pageSize: pageSize, pageNumber: pageNumber);
+                }
+                else if(!string.IsNullOrEmpty(search))
+                {
+                    villaList = await _dbVilla.GetAllAsync(x => x.Name.ToLower().Contains(search),
+                        pageSize: pageSize, pageNumber: pageNumber);
                 }
                 else
                 {
-                    //villaList = await _dbVilla.GetAllAsync();
-                    villaList = await _dbVilla.GetAllAsync(pageSize: pageSize, pageNumber: pageNumber);
-                }
-
-                if (!string.IsNullOrEmpty(search))
-                {
-                    villaList = villaList.Where(u => u.Name.ToLower().Contains(search) ||
-                    u.Amenity.ToLower().Contains(search) );
+                    villaList = await _dbVilla.GetAllAsync();
                 }
 
                 //將目前分頁資訊寫入檔頭
@@ -138,7 +142,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -183,7 +187,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpDelete("{id:int}", Name = "DeleteVilla")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -221,7 +225,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpPut("{id:int}", Name = "UpdateVilla")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
